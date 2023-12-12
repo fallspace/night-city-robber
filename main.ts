@@ -210,9 +210,10 @@ function setNextTurnFor (sprite: Sprite, next_turn: number) {
     if (sprite.kind() == SpriteKind.Player) {
         player_next_turn = next_turn
     } else {
-    	
+        police_next_turn = next_turn
     }
 }
+let police_next_turn = 0
 let gem_spawner = 0
 let boost_timer = 0
 let player_dir_change_location: tiles.Location = null
@@ -221,9 +222,33 @@ let player_dir = 0
 let player_next_turn = 0
 let player_car: Sprite = null
 player_car = sprites.create(assets.image`dsf`, SpriteKind.Player)
+let police_car = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.Enemy)
 animation.runImageAnimation(
 player_car,
 assets.animation`bluecar_0`,
+50,
+true
+)
+animation.runImageAnimation(
+police_car,
+assets.animation`bluecar_1`,
 50,
 true
 )
@@ -231,21 +256,32 @@ tiles.setCurrentTilemap(tilemap`city`)
 scene.setBackgroundColor(2)
 tiles.placeOnTile(player_car, tiles.getTileLocation(1, 2))
 scene.cameraFollowSprite(player_car)
+tiles.placeOnTile(police_car, tiles.getTileLocation(0, 2))
 player_next_turn = -1
 player_dir = 0
 player_speed = 2
 player_dir_change_location = player_car.tilemapLocation()
 boost_timer = 0
 gem_spawner = 10
+let police_dir = 0
+police_next_turn = -1
+let police_dir_change_location = police_car.tilemapLocation()
+let police_speed = 2
 info.setScore(0)
 info.setLife(3)
 game.onUpdate(function () {
     handleBoost(player_car)
     handleMove(player_car, player_dir, player_speed)
+    handleMove(police_car, police_dir, police_speed)
     if (player_dir_change_location != player_car.tilemapLocation()) {
         collideCorners(player_car, player_dir)
         collideTsections(player_car, player_next_turn, player_dir)
         collideIntersections(player_car, player_next_turn, player_dir)
+    }
+    if (police_dir_change_location != police_car.tilemapLocation()) {
+        collideCorners(police_car, police_dir)
+        collideTsections(police_car, police_next_turn, police_dir)
+        collideIntersections(police_car, police_next_turn, police_dir)
     }
     handleGems()
 })
