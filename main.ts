@@ -81,37 +81,67 @@ function changeDir (sprite: Sprite, dir: number) {
             music.play(music.melodyPlayable(music.zapped), music.PlaybackMode.InBackground)
             scene.cameraShake(4, 200)
         }
+        if (dir == 0) {
+            animation.runImageAnimation(
+            sprite,
+            assets.animation`bluecar_0`,
+            50,
+            true
+            )
+        } else if (dir == 1) {
+            animation.runImageAnimation(
+            sprite,
+            assets.animation`bluecar_4`,
+            50,
+            true
+            )
+        } else if (dir == 2) {
+            animation.runImageAnimation(
+            sprite,
+            assets.animation`bluecar_5`,
+            50,
+            true
+            )
+        } else if (dir == 3) {
+            animation.runImageAnimation(
+            sprite,
+            assets.animation`bluecar_6`,
+            50,
+            true
+            )
+        }
     } else {
-    	
-    }
-    if (dir == 0) {
-        animation.runImageAnimation(
-        sprite,
-        assets.animation`bluecar_0`,
-        50,
-        true
-        )
-    } else if (dir == 1) {
-        animation.runImageAnimation(
-        sprite,
-        assets.animation`bluecar_4`,
-        50,
-        true
-        )
-    } else if (dir == 2) {
-        animation.runImageAnimation(
-        sprite,
-        assets.animation`bluecar_5`,
-        50,
-        true
-        )
-    } else if (dir == 3) {
-        animation.runImageAnimation(
-        sprite,
-        assets.animation`bluecar_6`,
-        50,
-        true
-        )
+        police_dir = dir
+        police_dir_change_location = police_car.tilemapLocation()
+        if (dir == 0) {
+            animation.runImageAnimation(
+            sprite,
+            assets.animation`bluecar_1`,
+            50,
+            true
+            )
+        } else if (dir == 1) {
+            animation.runImageAnimation(
+            sprite,
+            assets.animation`bluecar_2`,
+            50,
+            true
+            )
+        } else if (dir == 2) {
+            animation.runImageAnimation(
+            sprite,
+            assets.animation`bluecar_3`,
+            50,
+            true
+            )
+        } else if (dir == 3) {
+            animation.runImageAnimation(
+            sprite,
+            assets.animation`bluecar_7`,
+            100,
+            true
+            )
+        }
     }
 }
 function collideIntersections (sprite: Sprite, next_turn: number, dir: number) {
@@ -213,16 +243,19 @@ function setNextTurnFor (sprite: Sprite, next_turn: number) {
         police_next_turn = next_turn
     }
 }
+let police_dir_change_location: tiles.Location = null
 let police_next_turn = 0
+let police_dir = 0
 let gem_spawner = 0
 let boost_timer = 0
 let player_dir_change_location: tiles.Location = null
 let player_speed = 0
 let player_dir = 0
 let player_next_turn = 0
+let police_car: Sprite = null
 let player_car: Sprite = null
 player_car = sprites.create(assets.image`dsf`, SpriteKind.Player)
-let police_car = sprites.create(img`
+police_car = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
@@ -263,9 +296,9 @@ player_speed = 2
 player_dir_change_location = player_car.tilemapLocation()
 boost_timer = 0
 gem_spawner = 10
-let police_dir = 0
+police_dir = 0
 police_next_turn = -1
-let police_dir_change_location = police_car.tilemapLocation()
+police_dir_change_location = police_car.tilemapLocation()
 let police_speed = 2
 info.setScore(0)
 info.setLife(3)
