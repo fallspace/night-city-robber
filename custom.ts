@@ -32,4 +32,25 @@ namespace custom {
         return a
     }
 
+    export function calcDirTo(sprite: Sprite, target: Sprite) {
+        let selfPos = sprite.tilemapLocation()
+        let targetPos = sprite.tilemapLocation()
+        let diffX = targetPos.x - selfPos.x
+        let diffY = targetPos.y - selfPos.y
+        if (diffX < 0 && Math.abs(diffX) > Math.abs(diffY)) {
+            return 2
+        } else if (diffX < 0 && diffY > 0) {
+            return 3
+        } else if (diffX < 0 && diffY < 0) {
+            return 1
+        } else if (diffX > 0 && Math.abs(diffX) > Math.abs(diffY)) {
+            return 0
+        } else if (diffX > 0 && diffY > 0) {
+            return 3
+        } else if (diffX > 0 && diffY < 0) {
+            return 1
+        }
+        return 0
+    }
+
 }
