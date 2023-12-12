@@ -63,6 +63,13 @@ function spawnGem (gem: Sprite) {
     }
     gem_spawner = 150
 }
+info.onCountdownEnd(function () {
+    game.setGameOverEffect(true, effects.confetti)
+    game.setGameOverPlayable(true, music.melodyPlayable(music.powerUp), false)
+    game.setGameOverMessage(true, "YOU GOT AWAY")
+    game.setGameOverScoringType(game.ScoringType.HighScore)
+    game.gameOver(true)
+})
 sprites.onOverlap(SpriteKind.Food, SpriteKind.Food, function (sprite, otherSprite) {
     sprites.destroy(otherSprite)
     gem_spawner = 5
@@ -243,6 +250,13 @@ function setNextTurnFor (sprite: Sprite, next_turn: number) {
         police_next_turn = next_turn
     }
 }
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
+    game.setGameOverEffect(false, effects.slash)
+    game.setGameOverPlayable(false, music.melodyPlayable(music.powerDown), false)
+    game.setGameOverMessage(false, "CAUGHT")
+    game.setGameOverScoringType(game.ScoringType.HighScore)
+    game.gameOver(false)
+})
 let police_dir_change_location: tiles.Location = null
 let police_next_turn = 0
 let police_dir = 0
@@ -299,9 +313,10 @@ gem_spawner = 10
 police_dir = 0
 police_next_turn = -1
 police_dir_change_location = police_car.tilemapLocation()
-let police_speed = 2
+let police_speed = 1.5
 info.setScore(0)
 info.setLife(3)
+info.startCountdown(60)
 game.onUpdate(function () {
     handleBoost(player_car)
     handleMove(player_car, player_dir, player_speed)
@@ -316,5 +331,6 @@ game.onUpdate(function () {
         collideTsections(police_car, police_next_turn, police_dir)
         collideIntersections(police_car, police_next_turn, police_dir)
     }
+    police_next_turn = custom.calcDirTo(police_car, player_car)
     handleGems()
 })
