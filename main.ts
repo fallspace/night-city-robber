@@ -172,7 +172,7 @@ function collideIntersections (sprite: Sprite, next_turn: number, dir: number) {
 sprites.onOverlap(SpriteKind.Player, SpriteKind.help, function (sprite, otherSprite) {
     music.play(music.melodyPlayable(music.jumpUp), music.PlaybackMode.InBackground)
     sprites.destroy(otherSprite)
-    game.showLongText("- Steer with arrow keys.\\n- Boost with (A).\\n- Collect as many gems as possible before the time runs out.\\n- And don't get caught by the police!", DialogLayout.Full)
+    game.showLongText("- Steer with arrow keys\\n- Boost with (A)\\n- Collect gems\\n- Reach the exit before the time runs out\\n- And don't get caught by the police!", DialogLayout.Full)
 })
 function turn (sprite: Sprite, dir: number) {
     changeDir(sprite, dir)
@@ -345,8 +345,8 @@ scene.setBackgroundColor(2)
 tiles.placeOnTile(player_car, tiles.getTileLocation(4, 4))
 scene.cameraFollowSprite(player_car)
 tiles.placeOnTile(police_car, tiles.getTileLocation(2, 4))
-tiles.placeOnTile(exit, tiles.getTileLocation(10, 4))
-tiles.placeOnTile(question_mark, tiles.getTileLocation(10, 2))
+tiles.placeOnTile(exit, tiles.getTileLocation(15, 8))
+tiles.placeOnTile(question_mark, tiles.getTileLocation(10, 4))
 player_next_turn = -1
 player_dir = 0
 player_speed = 2
