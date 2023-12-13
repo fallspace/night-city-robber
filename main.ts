@@ -1,3 +1,7 @@
+namespace SpriteKind {
+    export const None = SpriteKind.create()
+    export const help = SpriteKind.create()
+}
 function collideCorners (sprite: Sprite, dir: number) {
     if (sprite.tileKindAt(TileDirection.Center, assets.tile`leftdown`)) {
         if (dir == 0) {
@@ -50,6 +54,7 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     player_next_turn = 2
 })
 function spawnGem (gem: Sprite) {
+    gem.startEffect(effects.fountain, 200)
     animation.runImageAnimation(
     gem,
     assets.animation`gem`,
@@ -163,6 +168,11 @@ function collideIntersections (sprite: Sprite, next_turn: number, dir: number) {
         }
     }
 }
+sprites.onOverlap(SpriteKind.Player, SpriteKind.help, function (sprite, otherSprite) {
+    music.play(music.melodyPlayable(music.jumpUp), music.PlaybackMode.InBackground)
+    sprites.destroy(otherSprite)
+    game.showLongText("- Steer with arrow keys.\\n- Boost with (A).\\n- Collect as many gems as possible before the time runs out.\\n- And don't get caught by the police!", DialogLayout.Full)
+})
 function turn (sprite: Sprite, dir: number) {
     changeDir(sprite, dir)
     setNextTurnFor(sprite, -1)
@@ -194,6 +204,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSpr
     music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.InBackground)
     info.changeScoreBy(10)
     sprites.destroy(otherSprite)
+    sprite.startEffect(effects.bubbles, 200)
 })
 function handleGems () {
     if (sprites.allOfKind(SpriteKind.Food).length < 3 && gem_spawner > 0) {
@@ -266,7 +277,10 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
     if (invulnerable <= 0) {
         info.changeLifeBy(-1)
         scene.cameraShake(6, 500)
-        music.play(music.melodyPlayable(music.siren), music.PlaybackMode.InBackground)
+        sprite.startEffect(effects.hearts, 200)
+        if (info.life() > 0) {
+            music.play(music.melodyPlayable(music.siren), music.PlaybackMode.InBackground)
+        }
         boost_timer = 60
         player_speed = 0.2
         invulnerable = 60
@@ -303,6 +317,7 @@ police_car = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
     `, SpriteKind.Enemy)
+let question_mark = sprites.create(assets.image`myImage2`, SpriteKind.help)
 animation.runImageAnimation(
 player_car,
 assets.animation`bluecar_0`,
@@ -334,9 +349,7 @@ invulnerable = 0
 info.setScore(0)
 info.setLife(3)
 info.startCountdown(60)
-game.showLongText("Collect as many gems as possible before the time runs out.", DialogLayout.Bottom)
-game.showLongText("But don't get caught by the police!", DialogLayout.Bottom)
-game.showLongText("Steer with arrow keys. Boost with (A)", DialogLayout.Bottom)
+tiles.placeOnTile(question_mark, tiles.getTileLocation(10, 2))
 game.onUpdate(function () {
     handleBoost(player_car)
     handleMove(player_car, player_dir, player_speed)
@@ -347,8 +360,9 @@ game.onUpdate(function () {
         collideIntersections(player_car, player_next_turn, player_dir)
     }
     if (police_dir_change_location != police_car.tilemapLocation()) {
+        let mySprite: Sprite = null
         collideCorners(police_car, police_dir)
-        collideTsections(police_car, police_next_turn, police_dir)
+        collideTsections(mySprite, police_next_turn, police_dir)
         collideIntersections(police_car, police_next_turn, police_dir)
     }
     police_next_turn = custom.calcDirTo(police_car, player_car)
