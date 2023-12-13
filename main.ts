@@ -276,8 +276,8 @@ function setNextTurnFor (sprite: Sprite, next_turn: number) {
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
     if (invulnerable <= 0) {
         info.changeLifeBy(-1)
-        scene.cameraShake(6, 500)
         sprite.startEffect(effects.hearts, 200)
+        scene.cameraShake(6, 500)
         if (info.life() > 0) {
             music.play(music.melodyPlayable(music.siren), music.PlaybackMode.InBackground)
         }
@@ -360,9 +360,8 @@ game.onUpdate(function () {
         collideIntersections(player_car, player_next_turn, player_dir)
     }
     if (police_dir_change_location != police_car.tilemapLocation()) {
-        let mySprite: Sprite = null
         collideCorners(police_car, police_dir)
-        collideTsections(mySprite, police_next_turn, police_dir)
+        collideTsections(police_car, police_next_turn, police_dir)
         collideIntersections(police_car, police_next_turn, police_dir)
     }
     police_next_turn = custom.calcDirTo(police_car, player_car)
