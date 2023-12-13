@@ -1,6 +1,7 @@
 namespace SpriteKind {
     export const None = SpriteKind.create()
     export const help = SpriteKind.create()
+    export const exit = SpriteKind.create()
 }
 function collideCorners (sprite: Sprite, dir: number) {
     if (sprite.tileKindAt(TileDirection.Center, assets.tile`leftdown`)) {
@@ -74,11 +75,11 @@ function handleInvulnerable () {
     }
 }
 info.onCountdownEnd(function () {
-    game.setGameOverEffect(true, effects.confetti)
-    game.setGameOverPlayable(true, music.melodyPlayable(music.powerUp), false)
-    game.setGameOverMessage(true, "YOU GOT AWAY")
+    game.setGameOverEffect(false, effects.splatter)
+    game.setGameOverPlayable(false, music.melodyPlayable(music.powerDown), false)
+    game.setGameOverMessage(false, "RAN OUT OF FUEL")
     game.setGameOverScoringType(game.ScoringType.HighScore)
-    game.gameOver(true)
+    game.gameOver(false)
 })
 sprites.onOverlap(SpriteKind.Food, SpriteKind.Food, function (sprite, otherSprite) {
     sprites.destroy(otherSprite)
@@ -231,6 +232,13 @@ function handleGems () {
         }
     }
 }
+sprites.onOverlap(SpriteKind.Player, SpriteKind.exit, function (sprite, otherSprite) {
+    game.setGameOverEffect(true, effects.confetti)
+    game.setGameOverPlayable(true, music.melodyPlayable(music.powerUp), false)
+    game.setGameOverMessage(true, "YOU GOT AWAY")
+    game.setGameOverScoringType(game.ScoringType.HighScore)
+    game.gameOver(true)
+})
 function collideTsections (sprite: Sprite, next_turn: number, dir: number) {
     if (sprite.tileKindAt(TileDirection.Center, assets.tile`notup`)) {
         if ((dir == 0 || dir == 2) && next_turn == 3) {
@@ -319,6 +327,7 @@ police_car = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     `, SpriteKind.Enemy)
 let question_mark = sprites.create(assets.image`myImage2`, SpriteKind.help)
+let exit = sprites.create(assets.image`myImage3`, SpriteKind.exit)
 animation.runImageAnimation(
 player_car,
 assets.animation`bluecar_0`,
@@ -331,11 +340,13 @@ assets.animation`bluecar_1`,
 50,
 true
 )
-tiles.setCurrentTilemap(tilemap`city`)
+tiles.setCurrentTilemap(tilemap`level0`)
 scene.setBackgroundColor(2)
-tiles.placeOnTile(player_car, tiles.getTileLocation(1, 2))
+tiles.placeOnTile(player_car, tiles.getTileLocation(4, 4))
 scene.cameraFollowSprite(player_car)
-tiles.placeOnTile(police_car, tiles.getTileLocation(0, 2))
+tiles.placeOnTile(police_car, tiles.getTileLocation(2, 4))
+tiles.placeOnTile(exit, tiles.getTileLocation(10, 4))
+tiles.placeOnTile(question_mark, tiles.getTileLocation(10, 2))
 player_next_turn = -1
 player_dir = 0
 player_speed = 2
@@ -350,7 +361,6 @@ invulnerable = 0
 info.setScore(0)
 info.setLife(3)
 info.startCountdown(60)
-tiles.placeOnTile(question_mark, tiles.getTileLocation(10, 2))
 game.onUpdate(function () {
     handleBoost(player_car)
     handleMove(player_car, player_dir, player_speed)
