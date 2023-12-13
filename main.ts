@@ -132,6 +132,7 @@ function changeDir (sprite: Sprite, dir: number) {
         }
     } else {
         police_dir = dir
+        police_next_turn = randint(0, 3)
         police_dir_change_location = police_car.tilemapLocation()
         if (dir == 0) {
             animation.runImageAnimation(
@@ -344,11 +345,11 @@ true
 )
 tiles.setCurrentTilemap(tilemap`level0`)
 scene.setBackgroundColor(2)
-tiles.placeOnTile(player_car, tiles.getTileLocation(4, 4))
+tiles.placeOnTile(player_car, tiles.getTileLocation(6, 12))
 scene.cameraFollowSprite(player_car)
-tiles.placeOnTile(police_car, tiles.getTileLocation(2, 4))
-tiles.placeOnTile(exit, tiles.getTileLocation(15, 8))
-tiles.placeOnTile(question_mark, tiles.getTileLocation(10, 4))
+tiles.placeOnTile(police_car, tiles.getTileLocation(5, 12))
+tiles.placeOnTile(exit, tiles.getTileLocation(14, 7))
+tiles.placeOnTile(question_mark, tiles.getTileLocation(12, 12))
 player_next_turn = -1
 player_dir = 0
 player_speed = 2
@@ -356,7 +357,7 @@ player_dir_change_location = player_car.tilemapLocation()
 boost_timer = 0
 gem_spawner = 10
 police_dir = 0
-police_next_turn = -1
+police_next_turn = randint(0, 3)
 police_dir_change_location = police_car.tilemapLocation()
 let police_speed = 1.1
 invulnerable = 0
@@ -377,7 +378,6 @@ game.onUpdate(function () {
         collideTsections(police_car, police_next_turn, police_dir)
         collideIntersections(police_car, police_next_turn, police_dir)
     }
-    police_next_turn = custom.calcDirTo(police_car, player_car)
     handleGems()
     handleInvulnerable()
 })
