@@ -36,8 +36,8 @@ controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (boost_timer <= 0) {
         music.play(music.melodyPlayable(music.magicWand), music.PlaybackMode.InBackground)
-        boost_timer = 50
-        player_speed = 4
+        boost_timer = 16
+        player_speed = 6
     }
 })
 function handleMove (sprite: Sprite, dir: number, speed: number) {
@@ -91,14 +91,16 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
 function changeDir (sprite: Sprite, dir: number) {
     tiles.placeOnTile(sprite, sprite.tilemapLocation())
     if (sprite.kind() == SpriteKind.Player) {
+        if (sprite.kind() == SpriteKind.Player) {
+            if (player_speed > 1 && boost_timer > 0) {
+                boost_timer = boost_timer + 30
+                player_speed = 0.5
+                music.play(music.melodyPlayable(music.zapped), music.PlaybackMode.InBackground)
+                scene.cameraShake(4, 200)
+            }
+        }
         player_dir = dir
         player_dir_change_location = player_car.tilemapLocation()
-        if (boost_timer > 0) {
-            boost_timer = boost_timer * 2
-            player_speed = 0.5
-            music.play(music.melodyPlayable(music.zapped), music.PlaybackMode.InBackground)
-            scene.cameraShake(4, 200)
-        }
         if (dir == 0) {
             animation.runImageAnimation(
             sprite,
