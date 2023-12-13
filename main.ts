@@ -298,6 +298,7 @@ let player_dir = 0
 let player_next_turn = 0
 let police_car: Sprite = null
 let player_car: Sprite = null
+game.splash("NIGHT CITY ROBBER", "Steal - Evade - Escape")
 player_car = sprites.create(assets.image`dsf`, SpriteKind.Player)
 police_car = sprites.create(img`
     . . . . . . . . . . . . . . . . 
