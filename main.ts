@@ -63,6 +63,11 @@ function spawnGem (gem: Sprite) {
     }
     gem_spawner = 150
 }
+function handleInvulnerable () {
+    if (invulnerable > 0) {
+        invulnerable += -1
+    }
+}
 info.onCountdownEnd(function () {
     game.setGameOverEffect(true, effects.confetti)
     game.setGameOverPlayable(true, music.melodyPlayable(music.powerUp), false)
@@ -177,6 +182,13 @@ function handleBoost (sprite: Sprite) {
 controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
     player_next_turn = 3
 })
+info.onLifeZero(function () {
+    game.setGameOverEffect(false, effects.splatter)
+    game.setGameOverPlayable(false, music.melodyPlayable(music.powerDown), false)
+    game.setGameOverMessage(false, "BUSTED")
+    game.setGameOverScoringType(game.ScoringType.HighScore)
+    game.gameOver(false)
+})
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Food, function (sprite, otherSprite) {
     player_car.sayText("$$$", 1000, false)
     music.play(music.melodyPlayable(music.baDing), music.PlaybackMode.InBackground)
@@ -251,12 +263,16 @@ function setNextTurnFor (sprite: Sprite, next_turn: number) {
     }
 }
 sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
-    game.setGameOverEffect(false, effects.slash)
-    game.setGameOverPlayable(false, music.melodyPlayable(music.powerDown), false)
-    game.setGameOverMessage(false, "CAUGHT")
-    game.setGameOverScoringType(game.ScoringType.HighScore)
-    game.gameOver(false)
+    if (invulnerable <= 0) {
+        info.changeLifeBy(-1)
+        scene.cameraShake(6, 500)
+        music.play(music.melodyPlayable(music.siren), music.PlaybackMode.InBackground)
+        boost_timer = 60
+        player_speed = 0.2
+        invulnerable = 60
+    }
 })
+let invulnerable = 0
 let police_dir_change_location: tiles.Location = null
 let police_next_turn = 0
 let police_dir = 0
@@ -313,10 +329,14 @@ gem_spawner = 10
 police_dir = 0
 police_next_turn = -1
 police_dir_change_location = police_car.tilemapLocation()
-let police_speed = 1.5
+let police_speed = 1.1
+invulnerable = 0
 info.setScore(0)
 info.setLife(3)
 info.startCountdown(60)
+game.showLongText("Collect as many gems as possible before the time runs out.", DialogLayout.Bottom)
+game.showLongText("But don't get caught by the police!", DialogLayout.Bottom)
+game.showLongText("Steer with arrow keys. Boost with (A)", DialogLayout.Bottom)
 game.onUpdate(function () {
     handleBoost(player_car)
     handleMove(player_car, player_dir, player_speed)
@@ -333,4 +353,5 @@ game.onUpdate(function () {
     }
     police_next_turn = custom.calcDirTo(police_car, player_car)
     handleGems()
+    handleInvulnerable()
 })

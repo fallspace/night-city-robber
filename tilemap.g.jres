@@ -106,12 +106,6 @@
         "tilemapTile": true,
         "displayName": "leftright"
     },
-    "tile12": {
-        "data": "hwQQABAAAAAAAAAAAAAAAAAAAAAAAADAAAAAAAAAAMAAAAAAAAAAwAAAAAAAAADAAAAAAAAAAMAAAAAAAAAAwAAAAAAAAADAAAAAAAAAAMAAAAAAAAAAwAAAAAAAAADAAAAAAAAAAMAAAAAAAAAAwAAAAAAAAADAAAAAAAAAAMAAAAAAAAAAAA==",
-        "mimeType": "image/x-mkcd-f4",
-        "tilemapTile": true,
-        "displayName": "myTile"
-    },
     "level1": {
         "id": "level1",
         "mimeType": "application/mkcd-tilemap",
