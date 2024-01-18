@@ -343,13 +343,13 @@ assets.animation`bluecar_1`,
 50,
 true
 )
-tiles.setCurrentTilemap(tilemap`level0`)
+tiles.setCurrentTilemap(tilemap`city`)
 scene.setBackgroundColor(2)
-tiles.placeOnTile(player_car, tiles.getTileLocation(6, 12))
+tiles.placeOnTile(player_car, tiles.getTileLocation(6, 13))
 scene.cameraFollowSprite(player_car)
 tiles.placeOnTile(police_car, tiles.getTileLocation(5, 12))
-tiles.placeOnTile(exit, tiles.getTileLocation(14, 7))
-tiles.placeOnTile(question_mark, tiles.getTileLocation(12, 12))
+tiles.placeOnTile(exit, tiles.getTileLocation(14, 4))
+tiles.placeOnTile(question_mark, tiles.getTileLocation(11, 13))
 player_next_turn = -1
 player_dir = 0
 player_speed = 2
