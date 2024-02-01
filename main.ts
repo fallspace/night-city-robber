@@ -30,8 +30,8 @@ function collideCorners (sprite: Sprite, dir: number) {
         }
     }
 }
-controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
-    player_next_turn = 1
+controller.up.onEvent(ControllerButtonEvent.Repeated, function () {
+	
 })
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (boost_timer <= 0) {
@@ -51,8 +51,8 @@ function handleMove (sprite: Sprite, dir: number, speed: number) {
         sprite.y += speed
     }
 }
-controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
-    player_next_turn = 2
+controller.right.onEvent(ControllerButtonEvent.Repeated, function () {
+	
 })
 function spawnGem (gem: Sprite) {
     gem.startEffect(effects.fountain, 200)
@@ -84,9 +84,6 @@ info.onCountdownEnd(function () {
 sprites.onOverlap(SpriteKind.Food, SpriteKind.Food, function (sprite, otherSprite) {
     sprites.destroy(otherSprite)
     gem_spawner = 5
-})
-controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
-    player_next_turn = 0
 })
 function changeDir (sprite: Sprite, dir: number) {
     tiles.placeOnTile(sprite, sprite.tilemapLocation())
@@ -177,6 +174,9 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.help, function (sprite, otherSpr
     sprites.destroy(otherSprite)
     game.showLongText("- Steer with arrow keys\\n- Boost with (A)\\n- Collect gems\\n- Reach the exit before the time runs out\\n- And don't get caught by the police!", DialogLayout.Full)
 })
+controller.down.onEvent(ControllerButtonEvent.Repeated, function () {
+	
+})
 function turn (sprite: Sprite, dir: number) {
     changeDir(sprite, dir)
     setNextTurnFor(sprite, -1)
@@ -193,9 +193,6 @@ function handleBoost (sprite: Sprite) {
     	
     }
 }
-controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
-    player_next_turn = 3
-})
 info.onLifeZero(function () {
     game.setGameOverEffect(false, effects.splatter)
     game.setGameOverPlayable(false, music.melodyPlayable(music.powerDown), false)
@@ -297,6 +294,9 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSp
         invulnerable = 60
     }
 })
+controller.left.onEvent(ControllerButtonEvent.Repeated, function () {
+	
+})
 let invulnerable = 0
 let police_dir_change_location: tiles.Location = null
 let police_next_turn = 0
@@ -380,4 +380,6 @@ game.onUpdate(function () {
     }
     handleGems()
     handleInvulnerable()
+    player_next_turn = custom.getControllerToDir()
+    player_car.sayText(player_next_turn)
 })

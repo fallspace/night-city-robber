@@ -57,4 +57,23 @@ namespace custom {
         return 0;
     }
 
+
+    /**
+     * Handle all controllers
+     * @returns dir
+     */
+    //% block
+    export function getControllerToDir(): number {
+        if(controller.down.isPressed()) {
+            return 3;
+        } else if (controller.left.isPressed()) {
+            return 2;
+        } else if (controller.up.isPressed()) {
+            return 1;
+        } else if (controller.right.isPressed()) {
+            return 0;
+        } else {
+            return -1;
+        }
+    }
 }
