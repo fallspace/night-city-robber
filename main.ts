@@ -381,5 +381,4 @@ game.onUpdate(function () {
     handleGems()
     handleInvulnerable()
     player_next_turn = custom.getControllerToDir()
-    player_car.sayText(player_next_turn)
 })
